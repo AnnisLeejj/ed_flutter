@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'constant/constant.dart';
+import 'constant/dimens.dart';
 
 class WelcomePage extends StatefulWidget {
   @override
@@ -48,6 +50,17 @@ class _WelcomePageState extends State<WelcomePage> {
               ))
             ],
           )),
+          new Container(
+            padding: EdgeInsets.fromLTRB(Dimens.marginWindow, 0,
+                Dimens.marginWindow, Dimens.marginWindow),
+            child: new CupertinoButton(
+              child: new Text(
+                '进入',
+                style: new TextStyle(backgroundColor: ColorDef.colorPrimary),
+              ),
+              onPressed: () {},
+            ),
+          )
         ],
       ),
     ));
