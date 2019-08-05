@@ -4,11 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'constant/constant.dart';
-import 'constant/dimens.dart';
-import 'constant/mhttp.dart';
-import 'utils/SpUtil.dart';
-import 'utils/ToastUtil.dart';
+import '../constant/constant.dart';
+import '../constant/dimens.dart';
+import '../constant/mhttp.dart';
+import '../utils/SpUtil.dart';
+import '../utils/ToastUtil.dart';
+import 'Login.dart';
 
 class WelcomePage extends StatefulWidget {
   @override
@@ -51,13 +52,14 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   void _loadList() async {
-    final response =
-        await http.get(ServerInfo.ip_host + ServerApis.getEnvironment);
+    final url = ServerInfo.ip_host + ServerApis.getEnvironment;
+    print(url);
+    final response = await http.get(url);
     final jsonObject = json.decode(response.body);
     BaseResponse<List<dynamic>> baseResponse =
         new BaseResponse<List<dynamic>>.fromJson(jsonObject);
-
     setState(() {
+      print(baseResponse);
       mList = baseResponse.data;
     });
   }
@@ -85,9 +87,22 @@ class _WelcomePageState extends State<WelcomePage> {
     var object = jsonObject['data'];
     SpCommonUtil.getCommon().then((onValue) {
       onValue.setString(SpConstant.spTopLogo, object['appTopLogo']['url']);
-      onValue.setString(SpConstant.spBottomLogo, object['appBottomLogo']['url']);
+      onValue.setString(
+          SpConstant.spBottomLogo, object['appBottomLogo']['url']);
       showToast('环境加载完了！');
+//      toLogin();
+    }).whenComplete((){
+      toLogin();
     });
+//    toLogin();
+  }
+
+  void toLogin() async {
+    Navigator.push(
+      context,
+      new MaterialPageRoute(
+          builder: (context) => new LoginPage(), maintainState: false),
+    );
   }
 
   void _initSP() async {
