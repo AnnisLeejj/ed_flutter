@@ -19,8 +19,37 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   List<dynamic> mList = <dynamic>[];
   int checkedPosition = -1;
+  bool isLoading = false;
+
+  Widget _getLoadingView() {
+    if (isLoading) {
+      return Center(
+        child: SizedBox(
+          child: CircularProgressIndicator(
+            strokeWidth: 5,
+          ),
+          width: 70,
+          height: 70,
+        ),
+      );
+    } else {
+      return new ListView.builder(
+          padding: const EdgeInsets.all(10.0),
+          itemCount: mList.length,
+          itemBuilder: (context, position) {
+            return getChild(context, position);
+          });
+    }
+  }
+
+  void _setLoadingView(bool isLoading) {
+    setState(() {
+      this.isLoading = isLoading;
+    });
+  }
 
   Widget getChild(BuildContext context, int position) {
+//    _key = new GlobalKey<ScaffoldState>();
     return Container(
       child: GestureDetector(
         onTap: () {
@@ -64,11 +93,22 @@ class _WelcomePageState extends State<WelcomePage> {
     });
   }
 
+  clickListener() {
+    if (isLoading) {
+      return null;
+    } else {
+      return () {
+        _toLogin();
+      };
+    }
+  }
+
   void _toLogin() async {
     if (checkedPosition == -1) {
       showToast('请选择环境');
       return;
     }
+    _setLoadingView(true);
     var checked = mList[checkedPosition];
     String host =
         "http://${checked['ip']}:${checked['port']}/${checked['code']}/";
@@ -81,20 +121,24 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   void _getLogo() async {
-    final response =
-        await http.get(SpCommonUtil.getHost() + ServerApis.getLogo);
-    final jsonObject = json.decode(response.body);
-    var object = jsonObject['data'];
-    SpCommonUtil.getCommon().then((onValue) {
-      onValue.setString(SpConstant.spTopLogo, object['appTopLogo']['url']);
-      onValue.setString(
-          SpConstant.spBottomLogo, object['appBottomLogo']['url']);
-      showToast('环境加载完了！');
-//      toLogin();
-    }).whenComplete((){
-      toLogin();
-    });
-//    toLogin();
+    await http
+        .get(SpCommonUtil.getHost() + ServerApis.getLogo)
+        .timeout(Duration(seconds: 10))
+        .then((response) {
+      final jsonObject = json.decode(response.body);
+      var object = jsonObject['data'];
+      SpCommonUtil.getCommon().then((onValue) {
+        onValue.setString(SpConstant.spTopLogo, object['appTopLogo']['url']);
+        onValue.setString(
+            SpConstant.spBottomLogo, object['appBottomLogo']['url']);
+      }).whenComplete(() {
+        _setLoadingView(false);
+        toLogin();
+      });
+    }).catchError(((e) {
+      _setLoadingView(false);
+      showToast("加载失败");
+    }));
   }
 
   void toLogin() async {
@@ -122,6 +166,7 @@ class _WelcomePageState extends State<WelcomePage> {
         body: Container(
       padding: EdgeInsets.only(top: 60),
       child: Column(
+
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Image(
@@ -145,23 +190,19 @@ class _WelcomePageState extends State<WelcomePage> {
                   fontSize: 16,
                 ),
               )),
-          Expanded(
-              child: new ListView.builder(
-                  padding: const EdgeInsets.all(10.0),
-                  itemCount: mList.length,
-                  itemBuilder: (context, position) {
-                    return getChild(context, position);
-                  })),
+          Expanded(child: _getLoadingView()),
           Container(
             padding: EdgeInsets.fromLTRB(Dimens.marginWindow, 0,
                 Dimens.marginWindow, Dimens.marginWindow),
-            child: new MaterialButton(
+            child: MaterialButton(
+              padding: new EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
               minWidth: double.infinity,
               height: Dimens.buttonHeight,
               color: ColorDef.colorPrimary,
               textTheme: ButtonTextTheme.primary,
               child: new Text('进入'),
-              onPressed: _toLogin,
+              disabledColor: Colors.black12,
+              onPressed: clickListener(),
             ),
           )
         ],
