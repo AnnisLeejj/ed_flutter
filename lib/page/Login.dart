@@ -7,6 +7,8 @@ import 'package:ed_flutter/utils/ToastUtil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'forget.dart';
+
 class LoginPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => LoginContainerState();
@@ -60,7 +62,7 @@ class LoginContainerState extends State<LoginPage> {
         ),
         Expanded(
             child: Container(
-          padding: EdgeInsets.fromLTRB(35, 0, 35, 0),
+          padding: EdgeInsets.fromLTRB(45, 0, 45, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
@@ -145,7 +147,11 @@ class LoginContainerState extends State<LoginPage> {
   }
 
   forgot() {
-    showToast("忘记密码");
+    Navigator.push(
+      context,
+      new MaterialPageRoute(
+          builder: (context) => new Forget(), maintainState: false),
+    );
   }
 
   change() {
