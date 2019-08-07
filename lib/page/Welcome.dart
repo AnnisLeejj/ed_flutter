@@ -1,22 +1,32 @@
 import 'dart:convert';
 
+import 'package:ed_flutter/utils/StringUtil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../constant/constant.dart';
 import '../constant/dimens.dart';
-import '../constant/mhttp.dart';
 import '../utils/SpUtil.dart';
 import '../utils/ToastUtil.dart';
 import 'Login.dart';
 
 class WelcomePage extends StatefulWidget {
+  bool fromLogin = false;
+
+  WelcomePage({this.fromLogin});
+
   @override
-  State<StatefulWidget> createState() => _WelcomePageState();
+  State<StatefulWidget> createState() => _WelcomePageState(fromLogin);
 }
 
 class _WelcomePageState extends State<WelcomePage> {
+  bool fromLogin = false;
+
+  _WelcomePageState(this.fromLogin) {
+    print("_WelcomePageState");
+  }
+
   List<dynamic> mList = <dynamic>[];
   int checkedPosition = -1;
   bool isLoading = false;
@@ -49,7 +59,6 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   Widget getChild(BuildContext context, int position) {
-//    _key = new GlobalKey<ScaffoldState>();
     return Container(
       child: GestureDetector(
         onTap: () {
@@ -83,13 +92,15 @@ class _WelcomePageState extends State<WelcomePage> {
   void _loadList() async {
     final url = ServerInfo.ip_host + ServerApis.getEnvironment;
     print(url);
-    final response = await http.get(url);
-    final jsonObject = json.decode(response.body);
-    BaseResponse<List<dynamic>> baseResponse =
-        new BaseResponse<List<dynamic>>.fromJson(jsonObject);
-    setState(() {
-      print(baseResponse);
-      mList = baseResponse.data;
+    await http.get(url).then((response) {
+      if (response.statusCode == 200) {
+        final jsonObject = json.decode(response.body);
+        setState(() {
+          mList = jsonObject["data"];
+        });
+      }
+    }).catchError((e) {
+      showToast("加载环境失败");
     });
   }
 
@@ -121,7 +132,7 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   void _getLogo() async {
-    await http
+    http
         .get(SpCommonUtil.getHost() + ServerApis.getLogo)
         .timeout(Duration(seconds: 10))
         .then((response) {
@@ -142,11 +153,19 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   void toLogin() async {
-    Navigator.push(
-      context,
-      new MaterialPageRoute(
-          builder: (context) => new LoginPage(), maintainState: false),
-    );
+    if (fromLogin) {
+      Navigator.pop(context);
+    } else {
+      Navigator.pushAndRemoveUntil(
+          context,
+          new MaterialPageRoute(builder: (context) => new LoginPage()),
+          ModalRoute.withName("/welcome"));
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   void _initSP() async {
@@ -156,8 +175,19 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   void initState() {
     super.initState();
+    print("initState ${fromLogin == null}");
     _initSP();
+//    if (!fromLogin) {
+//      getHomePage();
+//    }
     _loadList();
+  }
+
+  getHomePage() async {
+    await SpCommonUtil.getCommon();
+    if (!StringUtil.isEmpty(SpCommonUtil.getHost())) {
+      toLogin();
+    }
   }
 
   @override
@@ -166,7 +196,6 @@ class _WelcomePageState extends State<WelcomePage> {
         body: Container(
       padding: EdgeInsets.only(top: 60),
       child: Column(
-
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Image(

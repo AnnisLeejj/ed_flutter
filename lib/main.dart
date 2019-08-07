@@ -1,18 +1,24 @@
+import 'package:ed_flutter/constant/constant.dart';
 import 'package:flutter/material.dart';
 
 import 'page/Welcome.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class MyApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      routes: {
+        "/welcome": (BuildContext context) => WelcomePage(),
+      },
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primaryColor: ColorDef.colorPrimary),
       home: WelcomePage(),
     );
   }

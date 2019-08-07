@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ed_flutter/constant/constant.dart';
 import 'package:ed_flutter/constant/dimens.dart';
 import 'package:ed_flutter/constant/style.dart';
+import 'package:ed_flutter/page/Welcome.dart';
 import 'package:ed_flutter/utils/SpUtil.dart';
 import 'package:ed_flutter/utils/ToastUtil.dart';
 import 'package:flutter/material.dart';
@@ -95,6 +96,8 @@ class LoginContainerState extends State<LoginPage> {
                 height: 30,
               ),
               MaterialButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
                 padding: new EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
                 minWidth: double.infinity,
                 height: Dimens.buttonHeight,
@@ -155,6 +158,13 @@ class LoginContainerState extends State<LoginPage> {
   }
 
   change() {
-    showToast("切换环境");
+    Navigator.push(
+      context,
+      new MaterialPageRoute(
+          builder: (context) => new WelcomePage(
+                fromLogin: true,
+              ),
+          maintainState: false),
+    );
   }
 }
