@@ -15,11 +15,11 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        "/welcome": (BuildContext context) => WelcomePage(),
+        "/welcome": (BuildContext context) => WelcomePage(fromLogin: false,),
       },
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primaryColor: ColorDef.colorPrimary),
-      home: WelcomePage(),
+      home: WelcomePage(fromLogin: false,),
     );
   }
 }

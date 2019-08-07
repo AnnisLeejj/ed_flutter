@@ -23,9 +23,7 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   bool fromLogin = false;
 
-  _WelcomePageState(this.fromLogin) {
-    print("_WelcomePageState");
-  }
+  _WelcomePageState(this.fromLogin);
 
   List<dynamic> mList = <dynamic>[];
   int checkedPosition = -1;
@@ -152,7 +150,7 @@ class _WelcomePageState extends State<WelcomePage> {
     }));
   }
 
-  void toLogin() async {
+  void toLogin() {
     if (fromLogin) {
       Navigator.pop(context);
     } else {
@@ -169,25 +167,22 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   void _initSP() async {
-    SpCommonUtil.getCommon();
+    SpCommonUtil.getCommon().then((sp) {
+      if (!fromLogin) {
+        String host = SpCommonUtil.getHost();
+        if (!StringUtil.isEmpty(host)) {
+          showToast("当前Host:$host");
+          toLogin();
+        }
+      }
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    print("initState ${fromLogin == null}");
     _initSP();
-//    if (!fromLogin) {
-//      getHomePage();
-//    }
     _loadList();
-  }
-
-  getHomePage() async {
-    await SpCommonUtil.getCommon();
-    if (!StringUtil.isEmpty(SpCommonUtil.getHost())) {
-      toLogin();
-    }
   }
 
   @override
