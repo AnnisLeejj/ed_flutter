@@ -8,7 +8,7 @@ class Forget extends StatefulWidget {
 }
 
 class _ForgetState extends State<Forget> {
-  final phoneController = TextEditingController()
+  final phoneController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
