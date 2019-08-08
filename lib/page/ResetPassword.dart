@@ -95,7 +95,7 @@ class ResetPassword extends StatelessWidget {
           body: {
             "vcodeToken": token,
             "phone": phone,
-            "newPwd": psw1
+            "newPwd": StringUtil.generateMd5(psw1)
           }).then((r) {
         print(r.body);
         if (r.statusCode == 200) {

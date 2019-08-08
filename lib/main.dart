@@ -1,7 +1,10 @@
 import 'package:ed_flutter/constant/constant.dart';
+import 'package:ed_flutter/page/Login.dart';
+import 'package:ed_flutter/page/MainPage.dart';
+import 'package:ed_flutter/page/SplashPage.dart';
 import 'package:flutter/material.dart';
 
-import 'page/Welcome.dart';
+import 'page/SelectorEvironment.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,11 +18,15 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        "/welcome": (BuildContext context) => WelcomePage(fromLogin: false,),
+        "/splash": (BuildContext context) => SplashPage(),
+        "/login": (BuildContext context) => LoginPage(),
+        "/welcome": (BuildContext context) =>
+            SelectorEnvironmentPage(fromLogin: false),
+        "/main": (BuildContext context) => MainPage(),
       },
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primaryColor: ColorDef.colorPrimary),
-      home: WelcomePage(fromLogin: false,),
+      home: SplashPage(),
     );
   }
 }

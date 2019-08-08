@@ -1,13 +1,19 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ed_flutter/constant/constant.dart';
 import 'package:ed_flutter/constant/dimens.dart';
 import 'package:ed_flutter/constant/style.dart';
-import 'package:ed_flutter/page/Welcome.dart';
+import 'package:ed_flutter/page/SelectorEvironment.dart';
+import 'package:ed_flutter/utils/HttpUtil.dart';
 import 'package:ed_flutter/utils/SpUtil.dart';
+import 'package:ed_flutter/utils/StringUtil.dart';
 import 'package:ed_flutter/utils/ToastUtil.dart';
+import 'package:ed_flutter/utils/mHttp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:http/http.dart' as http;
+import 'MainPage.dart';
 import 'forget.dart';
 
 class LoginPage extends StatefulWidget {
@@ -39,11 +45,8 @@ class LoginContainerState extends State<LoginPage> {
   }
 
   Widget _getLoginContent() {
-    print("SpCommonUtil.prefsCommon:${SpCommonUtil.prefsCommon == null}");
     final top = SpCommonUtil.prefsCommon.getString(SpConstant.spTopLogo);
     final bottom = SpCommonUtil.prefsCommon.getString(SpConstant.spBottomLogo);
-    print("logo top:     $top");
-    print("logo bottom:  $bottom");
     return Column(
       children: <Widget>[
         Container(
@@ -105,7 +108,7 @@ class LoginContainerState extends State<LoginPage> {
                 textTheme: ButtonTextTheme.primary,
                 child: new Text('登 录'),
                 disabledColor: Colors.black12,
-                onPressed: clickListener(),
+                onPressed: clickListener,
               ),
               Container(
                 height: 20,
@@ -144,26 +147,86 @@ class LoginContainerState extends State<LoginPage> {
   }
 
   clickListener() {
-    return () {
-      showToast("密码:${pswController.text}");
-    };
+    String phone = phoneController.text;
+    if (StringUtil.isEmpty(phone)) {
+      showToast("请输入手机号");
+      return;
+    }
+    String psw = pswController.text;
+    if (StringUtil.isEmpty(phone)) {
+      showToast("请输入密码");
+      return;
+    }
+    String url = SpCommonUtil.getHost() + ServerApis.login;
+    http.post(url, body: {
+      "username": phone,
+      "password": StringUtil.generateMd5(psw)
+    }).then((r) {
+      if (HttpUtil.isSuccessAndShowErrorMsg(r)) {
+        var mJson = json.decode(r.body);
+        var data = mJson["data"];
+        //组装数据并保存
+        SpCommonUtil.saveToken(data["token"]);
+        getUserInfo(data["userId"]);
+      }
+    }).catchError((e) {
+      showToast("登录失败");
+    });
+  }
+
+  getUserInfo(String userId) {
+    String url = SpCommonUtil.getHost() + ServerApis.getUser + "$userId";
+    http.get(url).then((r) {
+      if (HttpUtil.isSuccessAndShowErrorMsg(r)) {
+        var mJson = json.decode(r.body);
+        var data = mJson["data"];
+        String userInfo = json.encode(data);
+        SpCommonUtil.saveLastUserInfo(userInfo);
+        SpCommonUtil.saveLastUserID(data["userId"]);
+        SpCommonUtil.saveLastUserName(data["realName"]);
+        getUserPermission(userId);
+      }
+    }).catchError((e) {
+      showToast("获取用户信息失败");
+    });
+  }
+
+  getUserPermission(String userId) {
+    String url = SpCommonUtil.getHost() +
+        ServerApis.getUserPermission +
+        "?userId=$userId&platformType=2";
+    print("getUserPermission:$url");
+    //继续获取用户权限
+    tokenGet(url).then((r) {
+      print("getUserPermission:${r.body}");
+      if (HttpUtil.isSuccessAndShowErrorMsg(r)) {
+        var mJson = json.decode(r.body);
+        var data = mJson["data"];
+        SpCommonUtil.saveIsSignIn(true);
+        SpCommonUtil.saveUserPermission(json.encode(data));
+        Navigator.pushAndRemoveUntil(
+            context,
+            new MaterialPageRoute(builder: (context) => new MainPage()),
+            ModalRoute.withName("/login"));
+      }
+    }).catchError((e) {
+      showToast("获取用户信息失败");
+      print(e);
+    });
   }
 
   forgot() {
     Navigator.push(
-      context,
-      new MaterialPageRoute(
-          builder: (context) => new Forget(), maintainState: false),
-    );
+        context,
+        new MaterialPageRoute(
+            builder: (context) => new Forget(), maintainState: false));
   }
 
   change() {
     Navigator.push(
       context,
       new MaterialPageRoute(
-          builder: (context) => new WelcomePage(
-                fromLogin: true,
-              ),
+          builder: (context) => new SelectorEnvironmentPage(fromLogin: true),
           maintainState: false),
     );
   }

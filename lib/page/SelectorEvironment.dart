@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:ed_flutter/utils/StringUtil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -11,19 +10,19 @@ import '../utils/SpUtil.dart';
 import '../utils/ToastUtil.dart';
 import 'Login.dart';
 
-class WelcomePage extends StatefulWidget {
+class SelectorEnvironmentPage extends StatefulWidget {
   bool fromLogin = false;
 
-  WelcomePage({this.fromLogin});
+  SelectorEnvironmentPage({this.fromLogin});
 
   @override
-  State<StatefulWidget> createState() => _WelcomePageState(fromLogin);
+  State<StatefulWidget> createState() => _SelectorEnvironmentPageState(fromLogin);
 }
 
-class _WelcomePageState extends State<WelcomePage> {
+class _SelectorEnvironmentPageState extends State<SelectorEnvironmentPage> {
   bool fromLogin = false;
 
-  _WelcomePageState(this.fromLogin);
+  _SelectorEnvironmentPageState(this.fromLogin);
 
   List<dynamic> mList = <dynamic>[];
   int checkedPosition = -1;
@@ -166,22 +165,9 @@ class _WelcomePageState extends State<WelcomePage> {
     super.dispose();
   }
 
-  void _initSP() async {
-    SpCommonUtil.getCommon().then((sp) {
-      if (!fromLogin) {
-        String host = SpCommonUtil.getHost();
-        if (!StringUtil.isEmpty(host)) {
-          showToast("当前Host:$host");
-          toLogin();
-        }
-      }
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    _initSP();
     _loadList();
   }
 
