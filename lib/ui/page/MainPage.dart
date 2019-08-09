@@ -17,32 +17,26 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: new Scaffold(
-//      appBar: new AppBar(
-//        title: new Text("我是AppBar"),
-//        centerTitle: true,
-//      ),
-        body: new PageView.builder(
-          onPageChanged: _pageChange,
-          controller: _pageController,
-          itemBuilder: (BuildContext context, int index) {
-            return getPage(index);
-          },
-          itemCount: 3,
-        ),
-        bottomNavigationBar: new BottomNavigationBar(
-          items: [
-            BottomNavigationBarItem(
-                icon: new Icon(Icons.home), title: new Text("任务")),
-            BottomNavigationBarItem(
-                icon: new Icon(Icons.message), title: new Text("消息")),
-            BottomNavigationBarItem(
-                icon: new Icon(Icons.portrait), title: new Text("我的")),
-          ],
-          currentIndex: _currentPageIndex,
-          onTap: onTap,
-        ),
+    return new Scaffold(
+      body: new PageView.builder(
+        onPageChanged: _pageChange,
+        controller: _pageController,
+        itemBuilder: (BuildContext context, int index) {
+          return getPage(index);
+        },
+        itemCount: 3,
+      ),
+      bottomNavigationBar: new BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(
+              icon: new Icon(Icons.home), title: new Text("任务")),
+          BottomNavigationBarItem(
+              icon: new Icon(Icons.message), title: new Text("消息")),
+          BottomNavigationBarItem(
+              icon: new Icon(Icons.portrait), title: new Text("我的")),
+        ],
+        currentIndex: _currentPageIndex,
+        onTap: onTap,
       ),
     );
   }
