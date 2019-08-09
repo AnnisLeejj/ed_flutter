@@ -37,18 +37,27 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.cmct.ed_flutter"
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 27
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
 
-    signingConfigs {
-        release {
-            keyAlias 'ed'
+        manifestPlaceholders = [
+                AMAP_KEY : "bf3a839b59061fbbf161bbd4dd5e4995", /// 高德地图key
+        ]
+
+    }
+    signingConfigs {//签名配置
+        release {//发布版签名配置
+            keyAlias 'ed_flutter'
+            keyPassword 'ed123456'
+            storeFile file('../key.store/ed.jks')
+            storePassword 'ed123456'
+        }
+        debug {//debug版签名配置
+            keyAlias 'ed_flutter'
             keyPassword 'ed123456'
             storeFile file('../key.store/ed.jks')
             storePassword 'ed123456'
@@ -70,4 +79,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    implementation 'com.amap.api:location:4.4.0'
 }
