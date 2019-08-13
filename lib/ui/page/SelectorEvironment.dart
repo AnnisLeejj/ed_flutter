@@ -135,6 +135,7 @@ class _SelectorEnvironmentPageState extends State<SelectorEnvironmentPage> {
         .then((response) {
       final jsonObject = json.decode(response.body);
       var object = jsonObject['data'];
+
       SpCommonUtil.getCommon().then((onValue) {
         onValue.setString(SpConstant.spTopLogo, object['appTopLogo']['url']);
         onValue.setString(

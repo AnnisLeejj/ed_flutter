@@ -11,11 +11,7 @@ class HomePage extends StatefulWidget {
   State<StatefulWidget> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage>
-    with AutomaticKeepAliveClientMixin {
-  final _aMapLocation = AMapLocation();
-  Location _result;
-
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -27,42 +23,10 @@ class _HomePageState extends State<HomePage>
         Weather(),
         MaterialButton(
           child: Text("获取定位"),
-          onPressed: () {
-            getLocal(context);
-          },
+          onPressed: () {},
         ),
-        new Text("${_result == null ? "-null-" : json.encode(_result)}"),
+
       ],
     );
   }
-
-  getLocal(BuildContext context) async {
-    final options = LocationClientOptions(
-      isOnceLocation: true,
-      locatingWithReGeocode: true,
-    );
-
-    if (await Permissions().requestPermission()) {
-      await _aMapLocation.init();
-
-      _aMapLocation.getLocation(options).then((localtion) {
-        setState(() {
-          _result = localtion;
-        });
-      }).catchError((e) {
-        print("print catchError:$e");
-      });
-    } else {
-      Scaffold.of(context).showSnackBar(SnackBar(content: Text('权限不足')));
-    }
-  }
-
-  @override
-  void dispose() {
-    _aMapLocation.stopLocate();
-    super.dispose();
-  }
-
-  @override
-  bool get wantKeepAlive => true;
 }
