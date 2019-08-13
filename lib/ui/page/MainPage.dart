@@ -1,10 +1,9 @@
-import 'package:ed_flutter/page/home/MinePage.dart';
-import 'package:ed_flutter/utils/ToastUtil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'home/HomePage.dart';
 import 'home/MessagePage.dart';
+import 'home/MinePage.dart';
 
 class MainPage extends StatefulWidget {
   @override

@@ -4,7 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ed_flutter/constant/constant.dart';
 import 'package:ed_flutter/constant/dimens.dart';
 import 'package:ed_flutter/constant/style.dart';
-import 'package:ed_flutter/page/SelectorEvironment.dart';
 import 'package:ed_flutter/utils/HttpUtil.dart';
 import 'package:ed_flutter/utils/SpUtil.dart';
 import 'package:ed_flutter/utils/StringUtil.dart';
@@ -14,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'MainPage.dart';
+import 'SelectorEvironment.dart';
 import 'forget.dart';
 
 class LoginPage extends StatefulWidget {

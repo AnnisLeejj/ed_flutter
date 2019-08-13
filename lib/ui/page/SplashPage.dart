@@ -1,4 +1,3 @@
-import 'package:ed_flutter/page/SelectorEvironment.dart';
 import 'package:ed_flutter/utils/SpUtil.dart';
 import 'package:ed_flutter/utils/StringUtil.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'Login.dart';
 import 'MainPage.dart';
+import 'SelectorEvironment.dart';
 
 class SplashPage extends StatefulWidget {
   @override
