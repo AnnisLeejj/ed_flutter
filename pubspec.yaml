@@ -53,6 +53,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/weather/
+    - assets/images/menu/
   # assets:
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
