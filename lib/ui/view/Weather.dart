@@ -19,6 +19,25 @@ class _WeatherState extends State<Weather> with AutomaticKeepAliveClientMixin {
 
   String environmentName = "环境";
   String dataStr = "data";
+  String weatherStr = "晴";
+  String temperatureStr = "20";
+  String windStr = "风向:~";
+
+  Map weatherImg = {
+    "晴": "assets/images/weather/common_weather_sun.png",
+    "多云": "assets/images/weather/common_weather_cloudy_sky.png",
+    "阴": "assets/images/weather/common_weather_cloudy.png",
+    "雷阵雨": "assets/images/weather/common_weather_thunderstorm.png",
+    "雨夹雪": "assets/images/weather/common_weather_rain_snow.png",
+    "小雨": "assets/images/weather/common_weather_small_rain.png",
+    "中雨": "assets/images/weather/common_weather_small_rain.png",
+    "大雨": "assets/images/weather/common_weather_small_rain.png",
+    "小雪": "assets/images/weather/common_weather_snow.png",
+    "中雪": "assets/images/weather/common_weather_snow.png",
+    "大雪": "assets/images/weather/common_weather_snow.png",
+    "雾": "assets/images/weather/common_weather_wind.png",
+    "龙卷风": "assets/images/weather/common_weather_waterspout.png"
+  };
 
   @override
   void initState() {
@@ -78,9 +97,36 @@ class _WeatherState extends State<Weather> with AutomaticKeepAliveClientMixin {
             ),
           ),
           Expanded(
-            child: Center(
+            flex: 5,
+            child: Container(
               child: Row(
-                children: <Widget>[],
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Image(
+                    width: 35,
+                    height: 35,
+                    image: AssetImage(weatherImg[weatherStr]),
+                  ),
+                  Container(
+                    width: 10,
+                  ),
+                  Text(
+                    temperatureStr,
+                    style: TextStyle(color: Colors.white, fontSize: 30),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 23),
+                    alignment: Alignment.topCenter,
+                    child: Text(
+                      "℃",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                  ),
+                  Text(
+                    weatherStr,
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                  )
+                ],
               ),
             ),
           ),
@@ -90,7 +136,7 @@ class _WeatherState extends State<Weather> with AutomaticKeepAliveClientMixin {
                 alignment: Alignment.topLeft,
                 child: Text(
                   dataStr,
-                  style: TextStyle(color: Colors.white, fontSize: 17),
+                  style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
               Row(
@@ -103,9 +149,16 @@ class _WeatherState extends State<Weather> with AutomaticKeepAliveClientMixin {
                   ),
                   Text(
                     _result == null ? "     " : _result.district,
-                    style: TextStyle(color: Colors.white, fontSize: 17),
+                    style: TextStyle(color: Colors.white, fontSize: 15),
                   )
                 ],
+              ),
+              Container(
+                alignment: Alignment.bottomRight,
+                child: Text(
+                  windStr,
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ),
               ),
             ],
           ),
@@ -143,8 +196,32 @@ class _WeatherState extends State<Weather> with AutomaticKeepAliveClientMixin {
     post("http://apis.juhe.cn/simpleWeather/query",
             body: {"city": city, "key": "821923cb9b0117a31c4d4ce9f1904d26"})
         .then((r) {
-          var decode = json.decode(r.body);
-          print(r.body);
+      var decode = json.decode(r.body);
+      if (decode == null) {
+        return;
+      }
+      if (decode["error_code"] != 0) {
+        return;
+      }
+      var realtime = decode["result"]["realtime"];
+      if (realtime == null) {
+        return;
+      }
+      print(realtime);
+      setState(() {
+        weatherStr = realtime["info"];
+        temperatureStr = realtime["temperature"];
+        windStr = "风向:${realtime["direct"]} ${realtime["power"]}";
+      });
+//       {
+//      "temperature": "31",
+//      "humidity": "59",
+//      "info": "阴",
+//      "wid": "02",
+//      "direct": "西南风",
+//      "power": "2级",
+//      "aqi": "50"
+//      },
     });
   }
 

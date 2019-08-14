@@ -22,13 +22,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.4.0+1"
-  amap_base_search:
-    dependency: "direct main"
-    description:
-      name: amap_base_search
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.4.1"
   async:
     dependency: transitive
     description:
