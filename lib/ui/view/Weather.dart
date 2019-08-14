@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:amap_base/amap_base.dart';
 import 'package:ed_flutter/constant/constant.dart';
 import 'package:ed_flutter/utils/SpUtil.dart';
+import 'package:ed_flutter/utils/StringUtil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -12,6 +13,8 @@ class Weather extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _WeatherState();
 }
+
+const String psLastWeather = "psLastWeather";
 
 class _WeatherState extends State<Weather> with AutomaticKeepAliveClientMixin {
   final _aMapLocation = AMapLocation();
@@ -54,15 +57,22 @@ class _WeatherState extends State<Weather> with AutomaticKeepAliveClientMixin {
       setState(() {
         environmentName = name;
       });
+      String weatherJson = sp.getString(psLastWeather);
+      if (!StringUtil.isEmpty(weatherJson)) {
+        var decode = json.decode(weatherJson);
+        if (decode != null) {
+          setWeatherView(decode);
+        }
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(5),
+      padding: EdgeInsets.all(8),
       width: double.infinity,
-      height: 150,
+      height: 135,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
@@ -115,7 +125,7 @@ class _WeatherState extends State<Weather> with AutomaticKeepAliveClientMixin {
                     style: TextStyle(color: Colors.white, fontSize: 30),
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 23),
+                    padding: EdgeInsets.only(top: 20),
                     alignment: Alignment.topCenter,
                     child: Text(
                       "℃",
@@ -124,7 +134,7 @@ class _WeatherState extends State<Weather> with AutomaticKeepAliveClientMixin {
                   ),
                   Text(
                     weatherStr,
-                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    style: TextStyle(color: Colors.white, fontSize: 22),
                   )
                 ],
               ),
@@ -136,7 +146,7 @@ class _WeatherState extends State<Weather> with AutomaticKeepAliveClientMixin {
                 alignment: Alignment.topLeft,
                 child: Text(
                   dataStr,
-                  style: TextStyle(color: Colors.white, fontSize: 15),
+                  style: TextStyle(color: Colors.white, fontSize: 14),
                 ),
               ),
               Row(
@@ -149,7 +159,7 @@ class _WeatherState extends State<Weather> with AutomaticKeepAliveClientMixin {
                   ),
                   Text(
                     _result == null ? "     " : _result.district,
-                    style: TextStyle(color: Colors.white, fontSize: 15),
+                    style: TextStyle(color: Colors.white, fontSize: 14),
                   )
                 ],
               ),
@@ -157,7 +167,7 @@ class _WeatherState extends State<Weather> with AutomaticKeepAliveClientMixin {
                 alignment: Alignment.bottomRight,
                 child: Text(
                   windStr,
-                  style: TextStyle(color: Colors.white, fontSize: 15),
+                  style: TextStyle(color: Colors.white, fontSize: 14),
                 ),
               ),
             ],
@@ -179,9 +189,8 @@ class _WeatherState extends State<Weather> with AutomaticKeepAliveClientMixin {
       _aMapLocation.getLocation(options).then((localtion) {
         setState(() {
           _result = localtion;
-//          localStr = _result.district;
           getWeather(_result.city);
-          print("print success:$_result");
+//          print("print success:$_result");
         });
       }).catchError((e) {
         print("print catchError:$e");
@@ -204,16 +213,21 @@ class _WeatherState extends State<Weather> with AutomaticKeepAliveClientMixin {
         return;
       }
       var realtime = decode["result"]["realtime"];
+      var city = decode["result"]["city"];
       if (realtime == null) {
         return;
       }
-      print(realtime);
-      setState(() {
-        weatherStr = realtime["info"];
-        temperatureStr = realtime["temperature"];
-        windStr = "风向:${realtime["direct"]} ${realtime["power"]}";
+      SpCommonUtil.getCommon().then((sp) {
+        sp.setString(psLastWeather, json.encode(realtime));
       });
-//       {
+      realtime["city"] = city;
+      setWeatherView(realtime);
+    });
+  }
+
+  setWeatherView(var realtime) {
+    //city :"重庆",
+    //  {
 //      "temperature": "31",
 //      "humidity": "59",
 //      "info": "阴",
@@ -222,6 +236,11 @@ class _WeatherState extends State<Weather> with AutomaticKeepAliveClientMixin {
 //      "power": "2级",
 //      "aqi": "50"
 //      },
+//    print(realtime);
+    setState(() {
+      weatherStr = realtime["info"];
+      temperatureStr = realtime["temperature"];
+      windStr = "风向:${realtime["direct"]} ${realtime["power"]}";
     });
   }
 
