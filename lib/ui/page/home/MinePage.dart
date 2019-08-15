@@ -34,15 +34,24 @@ class _MinePageState extends State<MinePage> {
           child: Stack(
             children: <Widget>[
               ClipOval(
+                child: Image.network(
+                  'https://pic2.zhimg.com/v2-639b49f2f6578eabddc458b84eb3c6a1.jpg',
+                  width: 90,
+                  height: 90,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              ClipOval(
                 child: CachedNetworkImage(
-                  height: 70,
-                  width: 70,
-                  imageUrl: "http://via.placeholder.com/200x150",
+                  height: 90,
+                  width: 90,
+                  imageUrl:
+                      'https://pic2.zhimg.com/v2-639b49f2f6578eabddc458b84eb3c6a1.jpg',
                   imageBuilder: (context, imageProvider) => Container(
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: imageProvider,
-                        fit: BoxFit.cover,
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ),
