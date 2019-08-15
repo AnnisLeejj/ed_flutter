@@ -12,7 +12,7 @@ import 'package:ed_flutter/utils/mHttp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'MainPage.dart';
+import '../MainPage.dart';
 import 'SelectorEvironment.dart';
 import 'forget.dart';
 

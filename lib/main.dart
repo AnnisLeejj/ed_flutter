@@ -1,8 +1,8 @@
 import 'package:ed_flutter/constant/constant.dart';
-import 'package:ed_flutter/ui/page/Login.dart';
 import 'package:ed_flutter/ui/page/MainPage.dart';
-import 'package:ed_flutter/ui/page/SelectorEvironment.dart';
-import 'package:ed_flutter/ui/page/SplashPage.dart';
+import 'package:ed_flutter/ui/page/unlogin/Login.dart';
+import 'package:ed_flutter/ui/page/unlogin/SelectorEvironment.dart';
+import 'package:ed_flutter/ui/page/unlogin/SplashPage.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());

@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'Login.dart';
-import 'MainPage.dart';
+import '../MainPage.dart';
 import 'SelectorEvironment.dart';
 
 class SplashPage extends StatefulWidget {

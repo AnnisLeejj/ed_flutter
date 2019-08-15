@@ -5,6 +5,7 @@ import 'package:ed_flutter/constant/dimens.dart';
 import 'package:ed_flutter/ui/view/Weather.dart';
 import 'package:ed_flutter/utils/SpUtil.dart';
 import 'package:ed_flutter/utils/StringUtil.dart';
+import 'package:ed_flutter/utils/ToastUtil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +16,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<dynamic> userResList = new List();
-
+  final double childSize = 100;
+  final double iconSize = 65;
   Map menus = {
     "app_bt_daily": "assets/images/menu/icon_day.png",
     "app_bt_night": "assets/images/menu/icon_night.png",
@@ -62,6 +64,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    int crossCount = width ~/ (childSize + 10);
+    double childAspectRatio = (width / crossCount) / (childSize + 10);
     return Column(
       children: <Widget>[
         Container(
@@ -69,21 +74,19 @@ class _HomePageState extends State<HomePage> {
           color: ColorDef.colorPrimary,
         ),
         Weather(),
-        Container(
-          padding: EdgeInsets.fromLTRB(
-              Dimens.marginWindow, 0, Dimens.marginWindow, 0),
-          child: GridView.count(
-            shrinkWrap: true,
-            // Create a grid with 2 columns in portrait mode, or 3 columns in
-            // landscape mode.
-            crossAxisCount: 4,
-            mainAxisSpacing: 15,
-            // Generate 100 widgets that display their index in the List.
-            children: List.generate(userResList.length, (index) {
-              return getChild(index);
-            }),
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.fromLTRB(
+                Dimens.marginWindow, 0, Dimens.marginWindow, 0),
+            child: GridView.count(
+              crossAxisCount: crossCount,
+              childAspectRatio: childAspectRatio,
+              children: List.generate(userResList.length, (index) {
+                return getChild(index);
+              }),
+            ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -99,20 +102,33 @@ class _HomePageState extends State<HomePage> {
       imgUrl = menus["app_bt_daily"];
     }
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Image(
-            height: 65,
-            width: 65,
-            image: AssetImage(imgUrl),
+      child: GestureDetector(
+        onTap: () {
+          itemClick(routeUrl);
+        },
+        child: Container(
+          height: childSize,
+          width: childSize,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Image(
+                height: iconSize,
+                width: iconSize,
+                image: AssetImage(imgUrl),
+              ),
+              Text(
+                item["name"],
+                style: TextStyle(fontSize: 15),
+              ),
+            ],
           ),
-          Text(
-            item["name"],
-            style: TextStyle(fontSize: 15),
-          ),
-        ],
+        ),
       ),
     );
+  }
+
+  itemClick(String routeUrl) {
+    showToast("路径:$routeUrl");
   }
 }
