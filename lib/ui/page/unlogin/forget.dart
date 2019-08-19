@@ -34,7 +34,7 @@ class _ForgetState extends State<Forget> {
       ),
       body: Container(
         padding: EdgeInsets.fromLTRB(
-            Dimens.marginWindowBig, 10, Dimens.marginWindowBig, 0),
+            Dimens.marginWindowB, 10, Dimens.marginWindowB, 0),
         child: Column(
           children: <Widget>[
             Container(

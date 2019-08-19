@@ -65,7 +65,7 @@ class _SelectorEnvironmentPageState extends State<SelectorEnvironmentPage> {
         child: Row(
           children: <Widget>[
             SizedBox(
-              width: Dimens.marginWindow,
+              width: Dimens.marginWindowS,
             ),
             Expanded(
               child: Text('${position + 1}. ${mList[position]['name']}'),
@@ -202,8 +202,8 @@ class _SelectorEnvironmentPageState extends State<SelectorEnvironmentPage> {
               )),
           Expanded(child: _getLoadingView()),
           Container(
-            padding: EdgeInsets.fromLTRB(Dimens.marginWindow, 0,
-                Dimens.marginWindow, Dimens.marginWindow),
+            padding: EdgeInsets.fromLTRB(Dimens.marginWindowS, 0,
+                Dimens.marginWindowS, Dimens.marginWindowS),
             child: MaterialButton(
               padding: new EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
               minWidth: double.infinity,

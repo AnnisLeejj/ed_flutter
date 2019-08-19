@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> {
         Expanded(
           child: Container(
             padding: EdgeInsets.fromLTRB(
-                Dimens.marginWindow, 0, Dimens.marginWindow, 0),
+                Dimens.marginWindowS, 0, Dimens.marginWindowS, 0),
             child: GridView.count(
               crossAxisCount: crossCount,
               childAspectRatio: childAspectRatio,

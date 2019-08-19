@@ -7,6 +7,8 @@ class ColorDef {
   static final Color colorAccent = Color(0xffFF4081);
 
   static final Color textGray = Color(0xff505050);
+  static final Color buttonGray = Color(0xFF6F839D);
+  static final Color gray = Color(0xFFE1E5EE);
 }
 
 class ServerInfo {
@@ -32,7 +34,7 @@ class ServerApis {
   static final String login = "app/auth/login";
   static final String getUser =
       "app/sysUser/list/"; // "app/sysUser/list/{userId}";
-  static final String getUserPermission ="app/auth/permission";
+  static final String getUserPermission = "app/auth/permission";
 }
 
 class SpConstant {

@@ -47,7 +47,9 @@ android {
         manifestPlaceholders = [
                 AMAP_KEY : "bf3a839b59061fbbf161bbd4dd5e4995", /// 高德地图key
         ]
-
+        ndk {
+            abiFilters =  ['armeabi-v7a']//,'armeabi'
+        }
     }
     signingConfigs {//签名配置
         release {//发布版签名配置
