@@ -156,7 +156,7 @@ class _MinePageState extends State<MinePage> {
     }
   }
 
-  Widget getChild(String ic, String title, String ic_right) {
+  Widget getChild(String ic, String title, String icRight) {
     return GestureDetector(
       onTap: () {
         showToast(title);
@@ -187,7 +187,7 @@ class _MinePageState extends State<MinePage> {
               child: Image(
                 width: 15,
                 height: 15,
-                image: AssetImage(ic_right),
+                image: AssetImage(icRight),
               ),
             )
           ],
