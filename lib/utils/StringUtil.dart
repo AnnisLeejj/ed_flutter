@@ -16,8 +16,8 @@ class StringUtil {
   }
 
   ///判断是否为空
-  static bool isEmpty(String codeToken) {
-    return codeToken == null || codeToken.length == 0;
+  static bool isEmpty(String string) {
+    return string == null || string.length == 0;
   }
 
   /// md5 加密

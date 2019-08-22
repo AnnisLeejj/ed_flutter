@@ -10,7 +10,8 @@ import 'package:ed_flutter/utils/ToastUtil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'PersonalPage.dart';
+import 'mine/ChangePswPage.dart';
+import 'mine/PersonalPage.dart';
 
 class MinePage extends StatefulWidget {
   @override
@@ -105,15 +106,17 @@ class _MinePageState extends State<MinePage> {
           child: Column(
             children: <Widget>[
               getChild("assets/images/ic_pass.png", "修改密码",
-                  "assets/images/ic_more_gray.png"),
+                  "assets/images/ic_more_gray.png", () {
+                startNextPage(ChangePswPage());
+              }),
               getChild("assets/images/ic_audio.png", "播报设置",
-                  "assets/images/ic_more_gray.png"),
+                  "assets/images/ic_more_gray.png", () {}),
               getChild("assets/images/ic_push.png", "推送设置",
-                  "assets/images/ic_more_gray.png"),
+                  "assets/images/ic_more_gray.png", () {}),
               getChild("assets/images/ic_update_blue.png", "数据更新",
-                  "assets/images/ic_update_gray.png"),
+                  "assets/images/ic_update_gray.png", () {}),
               getChild("assets/images/ic_version_name.png", "版本信息",
-                  "assets/images/ic_more_gray.png"),
+                  "assets/images/ic_more_gray.png", () {}),
             ],
           ),
         ),
@@ -156,10 +159,10 @@ class _MinePageState extends State<MinePage> {
     }
   }
 
-  Widget getChild(String ic, String title, String icRight) {
+  Widget getChild(String ic, String title, String icRight, Function function) {
     return GestureDetector(
       onTap: () {
-        showToast(title);
+        function();
       },
       child: Container(
         decoration: UnderlineTabIndicator(
@@ -205,6 +208,13 @@ class _MinePageState extends State<MinePage> {
           new MaterialPageRoute(builder: (context) => new LoginPage()),
           ModalRoute.withName("/main"));
     });
+  }
+
+  startNextPage(Widget widget) {
+    Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (context) => widget, maintainState: false));
   }
 
   stopService() {}

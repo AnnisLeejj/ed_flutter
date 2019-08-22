@@ -32,6 +32,7 @@ class ServerApis {
   static final String modifyPwdWithVcodeToken =
       "app/sysUser/modifyPwdWithVcodeToken";
   static final String login = "app/auth/login";
+  static final String changePwd = "app/sysUser/modifyPwd/";
   static final String getUser =
       "app/sysUser/list/"; // "app/sysUser/list/{userId}";
   static final String getUserPermission = "app/auth/permission";
