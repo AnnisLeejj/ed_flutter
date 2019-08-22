@@ -8,7 +8,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.gms:google-services:4.2.0'
+//        classpath 'com.google.gms:google-services:4.2.0'
     }
 }
 
@@ -16,6 +16,26 @@ allprojects {
     repositories {
         google()
         jcenter()
+    }
+    configurations.all {
+        resolutionStrategy.force "androidx.versionedparcelable:versionedparcelable:1.0.0-rc01"
+        resolutionStrategy.force "androidx.core:core:1.0.2"
+    }
+}
+subprojects {
+    project.configurations.all {
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'androidx.core:core'
+                    && !details.requested.name.contains('core') ) {
+                details.useVersion "1.0.2"
+            }else if(details.requested.group == 'androidx.versionedparcelable:versionedparcelable'
+                    && !details.requested.name.contains('versionedparcelable')){
+                details.useVersion "1.0.0-rc01"
+            }else if(details.requested.group == 'androidx.lifecycle:lifecycle-runtime'
+                    && !details.requested.name.contains('lifecycle-runtime')){
+                details.useVersion "2.0.0-rc01"
+            }
+        }
     }
 }
 

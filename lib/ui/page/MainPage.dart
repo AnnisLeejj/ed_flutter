@@ -10,6 +10,16 @@ class MainPage extends StatefulWidget {
   State<StatefulWidget> createState() => _MainPageState();
 }
 
+class _MainPageState2 extends State<MainPage> {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Center(
+      child: Text("主页"),
+    );
+  }
+}
+
 class _MainPageState extends State<MainPage> {
   int _currentPageIndex = 0;
   var _pageController = new PageController(initialPage: 0);

@@ -47,9 +47,9 @@ android {
         manifestPlaceholders = [
                 AMAP_KEY : "bf3a839b59061fbbf161bbd4dd5e4995", /// 高德地图key
         ]
-        ndk {
-            abiFilters =  ['armeabi-v7a']//,'armeabi'
-        }
+//        ndk {
+//            abiFilters =  ['armeabi-v7a']//,'armeabi'
+//        }
     }
     signingConfigs {//签名配置
         release {//发布版签名配置
@@ -83,9 +83,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
 
-    // add the Firebase SDK for Google Analytics
-    implementation 'com.google.firebase:firebase-analytics:17.0.1'
-    // add SDKs for any other desired Firebase products
-    // https://firebase.google.com/docs/android/setup#available-libraries
+    /// amap ->   注意这里需要在主项目增加一条依赖，否则可能发生编译不通过的情况
+    implementation 'com.amap.api:location:latest.integration'
 
 }

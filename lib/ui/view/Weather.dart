@@ -1,13 +1,18 @@
 import 'dart:convert';
 
-import 'package:amap_base/amap_base.dart';
 import 'package:ed_flutter/constant/constant.dart';
 import 'package:ed_flutter/utils/SpUtil.dart';
 import 'package:ed_flutter/utils/StringUtil.dart';
+import 'package:ed_flutter/utils/ToastUtil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_amap/location.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
+
+//import 'package:flutter_amap/flutter_amap.dart';
+import 'package:amap_location/amap_location.dart';
+import 'package:simple_permissions/simple_permissions.dart';
 
 class Weather extends StatefulWidget {
   @override
@@ -17,13 +22,14 @@ class Weather extends StatefulWidget {
 const String psLastWeather = "psLastWeather";
 
 class _WeatherState extends State<Weather> with AutomaticKeepAliveClientMixin {
-  final _aMapLocation = AMapLocation();
-  Location _result;
+//  final _aMapLocation = AMapLocation();
+  AMapLocation _result;
 
+//  FlutterAmap amap = new FlutterAmap();
   String environmentName = "环境";
   String dataStr = "data";
   String weatherStr = "晴";
-  String temperatureStr = "20";
+  String temperatureStr = "-";
   String windStr = "风向:~";
 
   Map weatherImg = {
@@ -48,7 +54,7 @@ class _WeatherState extends State<Weather> with AutomaticKeepAliveClientMixin {
     getEnvironmentName();
     dataStr = DateFormat("M月d日  E").format(new DateTime.now());
 
-    getLocal(context);
+    _checkPersmission(context);
   }
 
   getEnvironmentName() async {
@@ -158,6 +164,7 @@ class _WeatherState extends State<Weather> with AutomaticKeepAliveClientMixin {
                     image: AssetImage("assets/images/ic_location.png"),
                   ),
                   Text(
+//                    "Text",
                     _result == null ? "     " : _result.district,
                     style: TextStyle(color: Colors.white, fontSize: 14),
                   )
@@ -177,33 +184,49 @@ class _WeatherState extends State<Weather> with AutomaticKeepAliveClientMixin {
     );
   }
 
-  getLocal(BuildContext context) async {
-    final options = LocationClientOptions(
-      isOnceLocation: true,
-      locatingWithReGeocode: true,
-    );
-
-    if (await Permissions().requestPermission()) {
-      await _aMapLocation.init();
-
-      _aMapLocation.getLocation(options).then((localtion) {
-        setState(() {
-          _result = localtion;
-          getWeather(_result.city);
-//          print("print success:$_result");
-        });
-      }).catchError((e) {
-        print("print catchError:$e");
-      });
-    } else {
-      Scaffold.of(context).showSnackBar(SnackBar(content: Text('权限不足')));
+  void _checkPersmission(BuildContext context) async {
+    bool hasPermission =
+    await SimplePermissions.checkPermission(Permission.WhenInUseLocation);
+    print("定位权限:$hasPermission");
+    if (!hasPermission) {
+      PermissionStatus requestPermissionResult =
+      await SimplePermissions.requestPermission(
+          Permission.WhenInUseLocation);
+      if (requestPermissionResult != PermissionStatus.authorized) {
+        showToast("申请定位权限失败");
+        return;
+      }
     }
+    getLocal(context);
+  }
+
+  void getLocal(BuildContext context) async {
+    print("准备获取定位");
+//    AMapLocationClient.getLocation(true).then((loc) {
+//      print("获取到定位");
+//      if (!mounted) return;
+//      setState(() {
+//        _result = loc;
+//      });
+//    });
+    await AMapLocationClient.startup(new AMapLocationOption(
+        desiredAccuracy: CLLocationAccuracy.kCLLocationAccuracyHundredMeters));
+    AMapLocationClient.onLocationUpate.listen((AMapLocation loc) {
+      print("获取到定位");
+      if (!mounted) return;
+      setState(() {
+        _result = loc;
+        getWeather(_result.city);
+      });
+      AMapLocationClient.stopLocation();
+    });
+    AMapLocationClient.startLocation();
   }
 
   getWeather(String city) {
     city = city.replaceAll("市", "").replaceAll("省", "");
     post("http://apis.juhe.cn/simpleWeather/query",
-            body: {"city": city, "key": "821923cb9b0117a31c4d4ce9f1904d26"})
+        body: {"city": city, "key": "821923cb9b0117a31c4d4ce9f1904d26"})
         .then((r) {
       var decode = json.decode(r.body);
       if (decode == null) {
@@ -246,7 +269,9 @@ class _WeatherState extends State<Weather> with AutomaticKeepAliveClientMixin {
 
   @override
   void dispose() {
-    _aMapLocation.stopLocate();
+//    _aMapLocation.stopLocate();
+    //注意这里关闭
+    AMapLocationClient.shutdown();
     super.dispose();
   }
 
