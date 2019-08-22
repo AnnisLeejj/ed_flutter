@@ -21,12 +21,14 @@ class HttpUtil {
     return false;
   }
 
-  static getMessage(dynamic body, {String message}) {
-    if (body == null) {
+  static getMessage(Response response, {String message}) {
+    if (response == null || response.body == null) {
       showToast(message == null ? "请求失败" : message);
     } else {
+      var decode = json.decode(response.body);
+
       ///根据 c/s 定义方案
-      var msg = body["message"];
+      var msg = decode["message"];
       showToast(msg == null ? message : msg);
     }
   }

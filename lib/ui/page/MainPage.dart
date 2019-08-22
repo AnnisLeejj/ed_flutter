@@ -27,6 +27,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      resizeToAvoidBottomPadding: false,
       body: new PageView.builder(
         onPageChanged: _pageChange,
         controller: _pageController,

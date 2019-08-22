@@ -9,6 +9,7 @@ import 'package:ed_flutter/utils/StringUtil.dart';
 import 'package:ed_flutter/utils/ToastUtil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 
 import 'mine/ChangePswPage.dart';
 import 'mine/PersonalPage.dart';
@@ -21,11 +22,25 @@ class MinePage extends StatefulWidget {
 class _MinePageState extends State<MinePage> {
   String userAvatar;
   String userName;
+  String versionCode = "";
 
   @override
   void initState() {
     super.initState();
     loadUserInfo();
+    _loadVersion();
+  }
+
+  _loadVersion() {
+    PackageInfo.fromPlatform().then((info) {
+      setState(() {
+        versionCode = info.version;
+
+        if (StringUtil.isEmpty(versionCode)) {
+          versionCode = "";
+        }
+      });
+    });
   }
 
   loadUserInfo() {
@@ -176,27 +191,47 @@ class _MinePageState extends State<MinePage> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Image(
-                  image: AssetImage(ic),
+                Expanded(
+                  child: Row(
+                    children: <Widget>[
+                      Image(
+                        width: 15,
+                        height: 15,
+                        image: AssetImage(ic),
+                      ),
+                      Container(
+                        width: 10,
+                      ),
+                      Text(title),
+                    ],
+                  ),
+                ),
+                Text(
+                  getSubTitle(title),
+                  style: TextStyle(color: ColorDef.textGray),
                 ),
                 Container(
                   width: 10,
                 ),
-                Text(title),
+                Image(
+                  width: 13,
+                  height: 13,
+                  image: AssetImage(icRight),
+                ),
               ],
             ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Image(
-                width: 15,
-                height: 15,
-                image: AssetImage(icRight),
-              ),
-            )
           ],
         ),
       ),
     );
+  }
+
+  String getSubTitle(String title) {
+    if (title == "版本信息") {
+      return versionCode;
+    } else {
+      return "";
+    }
   }
 
   logout() {

@@ -157,21 +157,22 @@ class _ChangePswPageState extends State<ChangePswPage> {
     }
 
 //    @POST("app/sysUser/modifyPwd/{userId}")
-//    Flowable<BaseResponse<String>> modifyPwd(@Path("userId") String userId, @Query("oldPwd") String oldPwd, @Query("newPwd") String newPwd);
-    String id  = SpCommonUtil.getLastUserID();
-    String url = ServerInfo.getBaseHost() +
-        ServerApis.changePwd ;
-    showToast("$id");
-//    http.post(url, body: {"oldPwd": old, "newPwd": _controller2.text}).then(
-//        (r) {
-//      print(r.body);
-//      showToast("2222");
-//      if (HttpUtil.isSuccessAndShowErrorMsg(r)) {
-//        showToast(HttpUtil.getMessage(r));
-//        Navigator.pop(context);
-//      }
-//    }).catchError((e) {
-//      showToast("请求失败!");
-//    });
+//    Flowable<BaseResponse<String>> modifyPwd(@Path("userId") String userId,
+//    @Query("oldPwd") String oldPwd, @Query("newPwd") String newPwd);
+    String id = SpCommonUtil.getLastUserID();
+    String url = ServerInfo.getBaseHost() + ServerApis.changePwd + id;
+    http.post(url, body: {
+      "oldPwd": StringUtil.generateMd5(old),
+      "newPwd": StringUtil.generateMd5(_controller2.text)
+    }).then((r) {
+      if (HttpUtil.isSuccessAndShowErrorMsg(r)) {
+        showToast(HttpUtil.getMessage(r));
+        Navigator.pop(context);
+      }
+    }).catchError((e) {
+      showToast("请求失败!${e.toString()}");
+
+      print("${e.toString()}");
+    });
   }
 }

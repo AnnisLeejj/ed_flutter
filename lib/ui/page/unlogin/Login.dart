@@ -179,12 +179,13 @@ class LoginContainerState extends State<LoginPage> {
     http.get(url).then((r) {
       if (HttpUtil.isSuccessAndShowErrorMsg(r)) {
         var mJson = json.decode(r.body);
+        print(r.body);
         var data = mJson["data"];
         String userInfo = json.encode(data);
         SpCommonUtil.saveLastUserInfo(userInfo);
-        SpCommonUtil.saveLastUserID(data["userId"]);
         SpCommonUtil.saveLastUserName(data["realName"]);
         getUserPermission(userId);
+        SpCommonUtil.saveLastUserID(userId);
       }
     }).catchError((e) {
       showToast("获取用户信息失败");
