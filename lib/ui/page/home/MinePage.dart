@@ -125,7 +125,9 @@ class _MinePageState extends State<MinePage> {
                 startNextPage(ChangePswPage());
               }),
               getChild("assets/images/ic_audio.png", "播报设置",
-                  "assets/images/ic_more_gray.png", () {}),
+                  "assets/images/ic_more_gray.png", () {
+                showBroadcastSetting();
+              }),
               getChild("assets/images/ic_push.png", "推送设置",
                   "assets/images/ic_more_gray.png", () {}),
               getChild("assets/images/ic_update_blue.png", "数据更新",
@@ -252,5 +254,252 @@ class _MinePageState extends State<MinePage> {
             builder: (context) => widget, maintainState: false));
   }
 
+  // 弹出对话框
+  Future<bool> showBroadcastSetting() {
+    return showDialog<dynamic>(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, state) {
+            return MyDialog();
+          },
+        );
+      },
+    );
+  }
+
   stopService() {}
+}
+
+class MyDialog extends StatefulWidget {
+  @override
+  _MyDialogState createState() => new _MyDialogState();
+}
+
+class _MyDialogState extends State<MyDialog> {
+  var _isChecked = false;
+  TextEditingController _controller = TextEditingController(text: "100");
+  TextEditingController _controller2 = TextEditingController(text: "1000");
+
+  @override
+  Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+    return AlertDialog(
+      content: Container(
+        height: 290,
+        width: 400,
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color.fromARGB(255, 49, 126, 245),
+                        Color.fromARGB(190, 49, 126, 245)
+                      ],
+                    ),
+                  ),
+                  height: 20,
+                  width: 5,
+                ),
+                Container(
+                  width: 10,
+                ),
+                Text("播报设置")
+              ],
+            ),
+            Container(
+              height: 15,
+            ),
+            Row(
+              children: <Widget>[
+                Container(
+                  width: width * 0.3,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color.fromARGB(255, 246, 246, 246),
+                        Color.fromARGB(255, 246, 246, 246),
+                      ],
+                    ),
+                  ),
+                  child: Center(
+                    child: Text("是否播报"),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        right: BorderSide(color: Color(0xFFE1E5EE), width: 0.5),
+                        top: BorderSide(color: Color(0xFFE1E5EE), width: 0.5),
+                        bottom:
+                            BorderSide(color: Color(0xFFE1E5EE), width: 0.5),
+                      ),
+                    ),
+                    child: Center(
+                      child: Switch(
+                        value: _isChecked,
+                        activeColor: ColorDef.colorPrimary,
+                        onChanged: (bool val) {
+                          setState(() {
+                            _isChecked = val;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            Container(
+              height: 15,
+            ),
+            Row(
+              children: <Widget>[
+                Container(
+                  width: width * 0.3,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color.fromARGB(255, 246, 246, 246),
+                        Color.fromARGB(255, 246, 246, 246),
+                      ],
+                    ),
+                  ),
+                  child: Center(
+                    child: Text("到达播报(m)"),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.only(left: 20),
+                    height: 50,
+                    decoration: BoxDecoration(
+//                      border: Border.all(color: Color(0xFFE1E5EE), width: 0.5),
+                      border: Border(
+                        right: BorderSide(color: Color(0xFFE1E5EE), width: 0.5),
+                        top: BorderSide(color: Color(0xFFE1E5EE), width: 0.5),
+                        bottom:
+                            BorderSide(color: Color(0xFFE1E5EE), width: 0.5),
+                      ),
+                    ),
+                    child: Center(
+                      child: TextField(
+                        controller: _controller,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                            border: InputBorder.none, hintText: "200m~1000m"),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            Container(
+              height: 15,
+            ),
+            Row(
+              children: <Widget>[
+                Container(
+                  width: width * 0.3,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color.fromARGB(255, 246, 246, 246),
+                        Color.fromARGB(255, 246, 246, 246),
+                      ],
+                    ),
+                  ),
+                  child: Center(
+                    child: Text("减速播报(m)"),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.only(left: 20),
+                    height: 50,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        right: BorderSide(color: Color(0xFFE1E5EE), width: 0.5),
+                        top: BorderSide(color: Color(0xFFE1E5EE), width: 0.5),
+                        bottom:
+                            BorderSide(color: Color(0xFFE1E5EE), width: 0.5),
+                      ),
+                    ),
+                    child: Center(
+                      child: TextField(
+                        controller: _controller2,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                            border: InputBorder.none, hintText: "1km~10km"),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            Container(
+              decoration: UnderlineTabIndicator(
+                borderSide: BorderSide(width: 0.5, color: ColorDef.gray),
+              ),
+              height: 15,
+            ),
+            new Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                new Flexible(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Center(
+                      child: new Text(
+                        "取消",
+                        style: TextStyle(color: ColorDef.textGray),
+                      ),
+                    ),
+                  ),
+                  flex: 1,
+                ),
+                Container(
+                  height: Dimens.buttonHeight,
+                  width: 0.5,
+                  color: ColorDef.gray,
+                ),
+                new Flexible(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Center(
+                      child: new Text(
+                        "确定",
+                        style: TextStyle(color: ColorDef.colorPrimary),
+                      ),
+                    ),
+                  ),
+                  flex: 1,
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
 }
