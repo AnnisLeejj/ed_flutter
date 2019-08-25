@@ -7,6 +7,7 @@ import 'package:ed_flutter/ui/page/unlogin/Login.dart';
 import 'package:ed_flutter/utils/SpUtil.dart';
 import 'package:ed_flutter/utils/StringUtil.dart';
 import 'package:ed_flutter/utils/ToastUtil.dart';
+import 'package:ed_flutter/utils/mHttp.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
@@ -484,6 +485,7 @@ class _MyDialogState extends State<MyDialog> {
                 new Flexible(
                   child: GestureDetector(
                     onTap: () {
+                      send();
                       Navigator.pop(context);
                     },
                     child: Center(
@@ -501,5 +503,23 @@ class _MyDialogState extends State<MyDialog> {
         ),
       ),
     );
+  }
+
+  send() {
+    //mPresenter.setBroadcast(
+    // new UserPersonalize(ArriveInt,ComeDownInt,swFlag)
+    // ));
+//    @POST("app/sysUser/personalize/broadcast")
+//    Flowable<BaseResponse> setBroadcast(@Body UserPersonalize personalize);
+    var body = new Map<String, dynamic>();
+    body["appArrive"] = _controller.text;
+    body["appSlowdown"] = _controller2.text;
+    body["broadcastFlag"] = "${_isChecked ? 1 : 0}";
+    tokenPost(SpCommonUtil.getHost() + ServerApis.broadcast, body: body)
+        .then((r) {
+      print(r.body);
+    }).catchError((e) {
+      print(e.toString());
+    });
   }
 }

@@ -35,7 +35,11 @@ class ServerApis {
   static final String changePwd = "app/sysUser/modifyPwd/";
   static final String getUser =
       "app/sysUser/list/"; // "app/sysUser/list/{userId}";
+  ///获取个人权限
   static final String getUserPermission = "app/auth/permission";
+  ///播报设置
+  static final String broadcast = "app/sysUser/personalize/broadcast";
+
 }
 
 class SpConstant {
